@@ -1,6 +1,14 @@
---Database schema file for the production db. Does not link to MySQL.
---This is a good place to store your schema commands when building out your system, for reference.
---It is a requirement to store your final db schema here.
 DROP SCHEMA `ims`;
 CREATE SCHEMA IF NOT EXISTS `ims`;
 USE `ims`;
+
+CREATE TABLE CUSTOMERS (CustomerID SMALLINT AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(40));
+
+CREATE TABLE ITEMS (ItemID SMALLINT AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(40), Cost INT);
+
+CREATE TABLE ORDERS (NoRecords SMALLINT AUTO_INCREMENT PRIMARY KEY, OrderID SMALLINT NOT NULL, CustomerId SMALLINT NOT NULL, ItemId SMALLINT NOT NULL, FOREIGN KEY (ItemId) REFERENCES ITEMS(ItemID), FOREIGN KEY (CustomerId) REFERENCES CUSTOMERS(CustomerID));
+
+
+
+
+

@@ -17,7 +17,7 @@ public class MenuSystem {
     }
 
     public void init() {
-        DbUtils.connect();
+        DbUtils.connect();        
     }
 
 }
