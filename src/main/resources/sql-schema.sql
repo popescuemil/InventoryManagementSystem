@@ -9,6 +9,8 @@ CREATE TABLE ITEMS (ItemID SMALLINT AUTO_INCREMENT PRIMARY KEY, Name VARCHAR(40)
 CREATE TABLE ORDERS (NoRecords SMALLINT AUTO_INCREMENT PRIMARY KEY, OrderID SMALLINT NOT NULL, CustomerId SMALLINT NOT NULL, ItemId SMALLINT NOT NULL, FOREIGN KEY (ItemId) REFERENCES ITEMS(ItemID), FOREIGN KEY (CustomerId) REFERENCES CUSTOMERS(CustomerID));
 
 
+INSERT INTO CUSTOMERS (Name) VALUES ('Lily'), ('Jake'), ('Mark'), ('Andrew'), ('Anna'), ('Phil'), ('Anthony');
 
+INSERT INTO ITEMS (Name, Cost) VALUES ('Processor', 200), ('Motherboard', 150), ('Power Supply', 100), ('Case', 125), ('Ram', 85), ('Fan', 10);
 
-
+INSERT INTO ORDERS (OrderID, CustomerId, ItemId) VALUES (1, 2, 1), (1, 2, 2), (1, 2, 3), (2, 5, 5), (2, 5, 6), (3, 1, 3), (3, 1, 6);
