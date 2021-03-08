@@ -1,11 +1,13 @@
 package com.barclays.ims.Models;
 
+import java.util.List;
+
 public class Order {
     private int OrderID;
     private int CustomerID;
-    private int[] ItemIDs;
+    private List<Integer> ItemIDs;
 
-    public Order(int orderID, int customerID, int[] itemIDs) {
+    public Order(int orderID, int customerID, List<Integer> itemIDs) {
         OrderID = orderID;
         CustomerID = customerID;
         ItemIDs = itemIDs;
@@ -15,7 +17,7 @@ public class Order {
         return OrderID;
     }
 
-    public int[] getItemIDs() {
+    public List<Integer> getItemIDs() {
         return ItemIDs;
     }
 
@@ -23,7 +25,7 @@ public class Order {
         return CustomerID;
     }
 
-    public void setItemIDs(int[] itemIDs) {
+    public void setItemIDs(List<Integer> itemIDs) {
         this.ItemIDs = itemIDs;
     }
 
@@ -37,6 +39,6 @@ public class Order {
 
     @Override
     public String toString() {
-        return "OrderID=" + getOrderID() + ", CustomerID='" + getCustomerID() + ", ItemIDs='" + getItemIDs();
+        return "OrderID=" + getOrderID() + ", CustomerID=" + getCustomerID() + ", ItemIDs=" + getItemIDs();
     }
 }

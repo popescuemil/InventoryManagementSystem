@@ -1,6 +1,15 @@
 package com.barclays.ims;
 
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
+
+import com.barclays.ims.DAOClasses.CustomerDAO;
+import com.barclays.ims.DAOClasses.ItemDAO;
+import com.barclays.ims.DAOClasses.OrderDAO;
+import com.barclays.ims.Models.Customer;
+import com.barclays.ims.Models.Item;
+import com.barclays.ims.Models.Order;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,6 +29,8 @@ public class MenuSystem {
 
     public void init() {
         DbUtils.connect();
+        DbUtils dbUtils = new DbUtils();
+        dbUtils.executeSQLFile("src\\main\\resources\\sql-schema.sql");
         
         while(true){
 
@@ -48,6 +59,7 @@ public class MenuSystem {
                 case "1": 
                     break;
                 case "2": 
+                    printAllCustomers();
                     break;
                 case "3": 
                     break;
@@ -56,6 +68,7 @@ public class MenuSystem {
                 case "5": 
                     break;
                 case "6": 
+                    printAllItems();
                     break;
                 case "7": 
                     break;
@@ -64,6 +77,7 @@ public class MenuSystem {
                 case "9": 
                     break;
                 case "10": 
+                    printAllOrders();
                     break;
                 case "11": 
                     break;
@@ -78,7 +92,45 @@ public class MenuSystem {
                     break;
             }
         }
+    }
 
+    private void printAllCustomers(){
+        CustomerDAO customer = new CustomerDAO();
+        try {
+            List<Customer> customerList = customer.readAll();
+
+            for (Customer c : customerList) {
+                System.out.println(c.toString());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void printAllItems(){
+        ItemDAO item = new ItemDAO();
+        try {
+            List<Item> itemList = item.readAll();
+
+            for (Item i : itemList) {
+                System.out.println(i.toString());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void printAllOrders(){
+        OrderDAO order = new OrderDAO();
+        try {
+            List<Order> orderList = order.readAll();
+
+            for (Order o : orderList) {
+                System.out.println(o.toString());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

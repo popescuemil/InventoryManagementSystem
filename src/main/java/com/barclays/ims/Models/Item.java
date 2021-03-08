@@ -37,6 +37,6 @@ public class Item {
 
     @Override
     public String toString() {
-        return "ItemID=" + getItemID() + ", ItemName='" + getItemName() + ", ItemCost='" + getItemCost();
+        return "ItemID=" + getItemID() + ", ItemName=" + getItemName() + ", ItemCost=" + getItemCost();
     }
 }
