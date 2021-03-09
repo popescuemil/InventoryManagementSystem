@@ -11,42 +11,51 @@ import com.barclays.ims.DAO;
 import com.barclays.ims.DbUtils;
 import com.barclays.ims.Models.Order;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class OrderDAO implements DAO<Order> {
+    private static final Logger LOGGER = LogManager.getLogger();
+    DbUtils dbUtils = new DbUtils();
 
     @Override
     public List<Order> readAll() throws SQLException {
-        
+
         List<Order> orderList = new ArrayList<>();
-        DbUtils dbUtils = new DbUtils();
-        Connection connection = dbUtils.getConnection();
+        try {
+            Connection connection = dbUtils.getConnection();
 
-        PreparedStatement statement = 
-                connection.prepareStatement("SELECT DISTINCT OrderID, CustomerId from ORDERS");
+            PreparedStatement statement = connection
+                    .prepareStatement("SELECT DISTINCT OrderID, CustomerId from ORDERS");
 
-        ResultSet resultSet = statement.executeQuery();
-        
-        while(resultSet.next()){
-           
-            int orderId = resultSet.getInt("OrderID");
-            int customerId = resultSet.getInt("CustomerId");
+            ResultSet resultSet = statement.executeQuery();
 
-            PreparedStatement statementItems = 
-                connection.prepareStatement("Select ItemId from ORDERS where OrderId = ?");
+            while (resultSet.next()) {
+
+                int orderId = resultSet.getInt("OrderID");
+                int customerId = resultSet.getInt("CustomerId");
+
+                PreparedStatement statementItems = connection
+                        .prepareStatement("Select ItemId from ORDERS where OrderId = ?");
                 statementItems.setInt(1, orderId);
 
                 ResultSet resultSetItems = statementItems.executeQuery();
 
                 List<Integer> itemIDs = new ArrayList<>();
 
-                while(resultSetItems.next()){
+                while (resultSetItems.next()) {
                     int itemId = resultSetItems.getInt("ItemId");
                     itemIDs.add(itemId);
-                }        
+                }
 
-            Order order = new Order(orderId, customerId, itemIDs);
-            orderList.add(order);
+                Order order = new Order(orderId, customerId, itemIDs);
+                orderList.add(order);
+            }
+            return orderList;
+        } catch (Exception e) {
+            LOGGER.debug(e);
+            return null;
         }
-        return orderList;
     }
 
     @Override

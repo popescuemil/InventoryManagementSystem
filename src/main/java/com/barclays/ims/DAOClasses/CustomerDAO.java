@@ -16,12 +16,12 @@ import org.apache.logging.log4j.Logger;
 
 public class CustomerDAO implements DAO<Customer> {
     private static final Logger LOGGER = LogManager.getLogger();
+    DbUtils dbUtils = new DbUtils();
 
     @Override
     public List<Customer> readAll() {
         try {
             List<Customer> customerList = new ArrayList<>();
-            DbUtils dbUtils = new DbUtils();
             Connection connection = dbUtils.getConnection();
 
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM CUSTOMERS");
@@ -57,7 +57,6 @@ public class CustomerDAO implements DAO<Customer> {
     @Override
     public Customer create(Customer t) {
         try {
-            DbUtils dbUtils = new DbUtils();
             Connection connection = dbUtils.getConnection();
 
             PreparedStatement statement = connection.prepareStatement("INSERT INTO CUSTOMERS (Name) VALUES (?)");
@@ -74,7 +73,6 @@ public class CustomerDAO implements DAO<Customer> {
     @Override
     public Customer update(Customer t) {
         try {
-            DbUtils dbUtils = new DbUtils();
             Connection connection = dbUtils.getConnection();
 
             PreparedStatement statement = connection.prepareStatement("UPDATE CUSTOMERS SET Name = ? WHERE CustomerID = ?");
@@ -90,10 +88,8 @@ public class CustomerDAO implements DAO<Customer> {
     }
 
     @Override
-    public int delete(Long id) {
-        
+    public int delete(Long id) {       
         try {
-            DbUtils dbUtils = new DbUtils();
             Connection connection = dbUtils.getConnection();
 
             PreparedStatement statement = connection.prepareStatement("DELETE FROM CUSTOMERS WHERE CustomerID = ?");

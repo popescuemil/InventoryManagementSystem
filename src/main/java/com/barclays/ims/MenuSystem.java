@@ -1,6 +1,7 @@
 package com.barclays.ims;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import com.barclays.ims.DAOClasses.CustomerDAO;
 import com.barclays.ims.DAOClasses.ItemDAO;
@@ -54,16 +55,19 @@ public class MenuSystem {
             String option = scanner.getString();
 
             switch(option){
+
                 case "1": 
                     System.out.println("\nEnter Customer Name: ");
                     String customerName = scanner.getString();
                     addCustomer(customerName);
                     break;
+
                 case "2": 
                     printAllCustomers();
                     System.out.println("\nPress ENTER to go back to menu");
                     scanner.getString();
                     break;
+
                 case "3": 
                     System.out.println("\nEnter the ID of the Customer you want to update: ");
                     Long custId = scanner.getLong();
@@ -71,35 +75,75 @@ public class MenuSystem {
                     String custName = scanner.getString();
                     updateCustomer(custId, custName);
                     break;
+
                 case "4": 
                     System.out.println("\nEnter the ID of the Customer you want to delete: ");
                     Long customerId = scanner.getLong();
                     deleteCustomer(customerId);
                     break;
+
                 case "5": 
+                    System.out.println("\nEnter Item Name: ");
+                    String itemName = scanner.getString();
+                    System.out.println("\nEnter Item cost: ");
+                    Double itemCost = scanner.getDouble();
+                    addItem(itemName, itemCost);
                     break;
+
                 case "6": 
                     printAllItems();
+                    System.out.println("\nPress ENTER to go back to menu");
+                    scanner.getString();
                     break;
-                case "7": 
+
+                case "7":
+                    System.out.println("\nEnter the ID of the Item you want to update: ");
+                    Long itmId = scanner.getLong();
+                    System.out.println("\nEnter the updated Item Name: ");
+                    String itmName = scanner.getString();
+                    System.out.println("\nEnter the updated Item cost: ");
+                    Double itmCost = scanner.getDouble();
+                    updateItem(itmId, itmName, itmCost);
                     break;
-                case "8": 
+
+                case "8":
+                    System.out.println("\nEnter the ID of the Item you want to delete: ");
+                    Long itemId = scanner.getLong();
+                    deleteItem(itemId); 
                     break;
+
                 case "9": 
                     break;
+
                 case "10": 
                     printAllOrders();
+                    System.out.println("\nPress ENTER to go back to menu");
+                    scanner.getString();
                     break;
+
                 case "11": 
                     break;
+
                 case "12": 
                     break;
+
                 case "13": 
                     break;
+
                 case "14": 
                     break;
+
                 case "15": 
                     System.exit(0);
+                    break;
+
+                default:
+                    System.out.println("\nInvalid selection");
+                try {
+                    TimeUnit.SECONDS.sleep(2);
+                } catch (InterruptedException e) {
+                    LOGGER.debug(e);
+                }
                     break;
             }
         }
@@ -174,4 +218,34 @@ public class MenuSystem {
         }
     }
 
+    private void addItem(String itemName, Double itemCost){
+        Item item = new Item(itemName, itemCost);
+        ItemDAO itemDAO = new ItemDAO();
+        try {
+            itemDAO.create(item);          
+        } catch (Exception e) {
+            LOGGER.debug(e);
+        }
+    }
+
+    private void updateItem(Long itmId, String itmName, Double itmCost){
+        Item item = new Item(itmId.intValue(), itmName, itmCost);
+        ItemDAO itemDAO = new ItemDAO();
+        try {
+            itemDAO.update(item);          
+        } catch (Exception e) {
+            LOGGER.debug(e);
+        }
+    }
+
+    private void deleteItem(Long itemId){
+        ItemDAO itemDAO = new ItemDAO();
+        try {
+            itemDAO.delete(itemId);          
+        } catch (Exception e) {
+            LOGGER.debug(e);
+        }
+    }
 }
+
+

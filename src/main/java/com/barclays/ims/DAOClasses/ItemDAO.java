@@ -18,11 +18,13 @@ import org.apache.logging.log4j.Logger;
 public class ItemDAO implements DAO<Item> {
     
     private static final Logger LOGGER = LogManager.getLogger();
+    DbUtils dbUtils = new DbUtils();
+
     @Override
     public List<Item> readAll() {
         try {
             List<Item> itemList = new ArrayList<>();
-            DbUtils dbUtils = new DbUtils();
+
             Connection connection = dbUtils.getConnection();
 
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM ITEMS");
@@ -59,11 +61,10 @@ public class ItemDAO implements DAO<Item> {
     @Override
     public Item create(Item t) {
         try {
-            DbUtils dbUtils = new DbUtils();
             Connection connection = dbUtils.getConnection();
 
             PreparedStatement statement = connection.prepareStatement("INSERT INTO ITEMS (Name, Cost) VALUES (?,?)");
-            statement.setString(1, t.getCustomerName());
+            statement.setString(1, t.getItemName());
             statement.setDouble(2, t.getItemCost());
 
             statement.executeUpdate();
@@ -76,14 +77,36 @@ public class ItemDAO implements DAO<Item> {
 
     @Override
     public Item update(Item t) {
-        // TODO Auto-generated method stub
-        return null;
+        try {
+            Connection connection = dbUtils.getConnection();
+
+            PreparedStatement statement = connection.prepareStatement("UPDATE ITEMS SET Name = ?, Cost = ? WHERE ItemID = ?");
+            statement.setString(1, t.getItemName());
+            statement.setDouble(2, t.getItemCost());
+            statement.setInt(3, t.getItemID());
+
+            statement.executeUpdate();
+            return null;
+        } catch (Exception e) {
+            LOGGER.debug(e);
+            return null;
+        }
     }
 
     @Override
     public int delete(Long id) {
-        // TODO Auto-generated method stub
-        return 0;
+        try {
+            Connection connection = dbUtils.getConnection();
+
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM ITEMS WHERE ItemID = ?");
+            statement.setInt(1, id.intValue());
+
+            statement.executeUpdate();
+            return 1;
+        } catch (Exception e) {
+            LOGGER.debug(e);
+            return 0;
+        }
     }
 
     @Override
