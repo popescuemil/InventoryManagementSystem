@@ -9,6 +9,10 @@ public class Customer {
         CustomerName = customerName;
     }
 
+    public Customer(String customerName) {
+        CustomerName = customerName;
+    }
+
     public int getCustomerID() {
         return CustomerID;
     }

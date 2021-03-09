@@ -11,28 +11,37 @@ import com.barclays.ims.DAO;
 import com.barclays.ims.DbUtils;
 import com.barclays.ims.Models.Item;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+
 public class ItemDAO implements DAO<Item> {
-
+    
+    private static final Logger LOGGER = LogManager.getLogger();
     @Override
-    public List<Item> readAll() throws SQLException {
-        List<Item> itemList = new ArrayList<>();
-        DbUtils dbUtils = new DbUtils();
-        Connection connection = dbUtils.getConnection();
+    public List<Item> readAll() {
+        try {
+            List<Item> itemList = new ArrayList<>();
+            DbUtils dbUtils = new DbUtils();
+            Connection connection = dbUtils.getConnection();
 
-        PreparedStatement statement = 
-                connection.prepareStatement("SELECT * FROM ITEMS");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM ITEMS");
 
-        ResultSet resultSet = statement.executeQuery();
-        
-        while(resultSet.next()){
-            int itemId = resultSet.getInt("ItemID");
-            String itemName = resultSet.getString("Name");
-            int itemCost = resultSet.getInt("Cost");
+            ResultSet resultSet = statement.executeQuery();
 
-            Item item = new Item(itemId, itemName, itemCost);
-            itemList.add(item);
+            while (resultSet.next()) {
+                int itemId = resultSet.getInt("ItemID");
+                String itemName = resultSet.getString("Name");
+                int itemCost = resultSet.getInt("Cost");
+
+                Item item = new Item(itemId, itemName, itemCost);
+                itemList.add(item);
+            }
+            return itemList;
+        } catch (Exception e) {
+            LOGGER.debug(e);
+            return null;
         }
-        return itemList;
     }
 
     @Override
@@ -49,8 +58,20 @@ public class ItemDAO implements DAO<Item> {
 
     @Override
     public Item create(Item t) {
-        // TODO Auto-generated method stub
-        return null;
+        try {
+            DbUtils dbUtils = new DbUtils();
+            Connection connection = dbUtils.getConnection();
+
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO ITEMS (Name, Cost) VALUES (?,?)");
+            statement.setString(1, t.getCustomerName());
+            statement.setDouble(2, t.getItemCost());
+
+            statement.executeUpdate();
+            return null;
+        } catch (Exception e) {
+            LOGGER.debug(e);
+            return null;
+        }
     }
 
     @Override

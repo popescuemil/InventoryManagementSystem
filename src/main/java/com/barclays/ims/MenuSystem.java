@@ -1,8 +1,6 @@
 package com.barclays.ims;
 
-import java.sql.SQLException;
 import java.util.List;
-import java.util.Scanner;
 
 import com.barclays.ims.DAOClasses.CustomerDAO;
 import com.barclays.ims.DAOClasses.ItemDAO;
@@ -57,13 +55,26 @@ public class MenuSystem {
 
             switch(option){
                 case "1": 
+                    System.out.println("\nEnter Customer Name: ");
+                    String customerName = scanner.getString();
+                    addCustomer(customerName);
                     break;
                 case "2": 
                     printAllCustomers();
+                    System.out.println("\nPress ENTER to go back to menu");
+                    scanner.getString();
                     break;
                 case "3": 
+                    System.out.println("\nEnter the ID of the Customer you want to update: ");
+                    Long custId = scanner.getLong();
+                    System.out.println("\nEnter the updated Name: ");
+                    String custName = scanner.getString();
+                    updateCustomer(custId, custName);
                     break;
                 case "4": 
+                    System.out.println("\nEnter the ID of the Customer you want to delete: ");
+                    Long customerId = scanner.getLong();
+                    deleteCustomer(customerId);
                     break;
                 case "5": 
                     break;
@@ -102,8 +113,8 @@ public class MenuSystem {
             for (Customer c : customerList) {
                 System.out.println(c.toString());
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            LOGGER.debug(e);
         }
     }
 
@@ -115,8 +126,8 @@ public class MenuSystem {
             for (Item i : itemList) {
                 System.out.println(i.toString());
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            LOGGER.debug(e);
         }
     }
 
@@ -128,8 +139,38 @@ public class MenuSystem {
             for (Order o : orderList) {
                 System.out.println(o.toString());
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            LOGGER.debug(e);
+        }
+    }
+
+    private void addCustomer(String customerName){
+        Customer customer = new Customer(customerName);
+        CustomerDAO customerDAO = new CustomerDAO();
+        try {
+            customerDAO.create(customer);
+            
+        } catch (Exception e) {
+            LOGGER.debug(e);
+        }
+    }
+
+    private void deleteCustomer(long customerId){
+        CustomerDAO customerDAO = new CustomerDAO();
+        try {
+            customerDAO.delete(customerId);           
+        } catch (Exception e) {
+            LOGGER.debug(e);
+        }
+    }
+
+    private void updateCustomer(Long customerID, String customerName){
+        Customer customer = new Customer(customerID.intValue(), customerName);
+        CustomerDAO customerDAO = new CustomerDAO();
+        try {
+            customerDAO.update(customer);          
+        } catch (Exception e) {
+            LOGGER.debug(e);
         }
     }
 
