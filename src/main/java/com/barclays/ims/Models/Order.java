@@ -13,6 +13,11 @@ public class Order {
         ItemIDs = itemIDs;
     }
     
+    public Order(int customerID, List<Integer> itemIDs) {
+        CustomerID = customerID;
+        ItemIDs = itemIDs;
+    }
+    
     public int getOrderID() {
         return OrderID;
     }

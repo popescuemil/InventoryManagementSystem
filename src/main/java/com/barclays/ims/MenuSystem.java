@@ -1,5 +1,7 @@
 package com.barclays.ims;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -112,7 +114,20 @@ public class MenuSystem {
                     deleteItem(itemId); 
                     break;
 
-                case "9": 
+                case "9":
+                    System.out.println("\nEnter the ID of the Customer for this Order: ");
+                    Long custOrderId = scanner.getLong();
+                    List<Integer> listOfItems = new ArrayList<>();
+
+                    System.out.println("\nEnter the IDs of the Items you want to add for this Order e.g.(1,2,3,4): ");
+                    String itemsString = scanner.getString();
+
+                    List<String> listOfStringItems = Arrays.asList(itemsString.split("\\s*,\\s*"));
+
+                    for(String s : listOfStringItems) listOfItems.add(Integer.valueOf(s));
+
+                    createOrder(custOrderId, listOfItems);
+
                     break;
 
                 case "10": 
@@ -122,15 +137,36 @@ public class MenuSystem {
                     break;
 
                 case "11": 
+                    System.out.println("\nEnter the ID of the Order you want to delete: ");
+                    Long orderId = scanner.getLong();
+                    deleteOrder(orderId); 
                     break;
 
                 case "12": 
+                    System.out.println("\nEnter the ID of the Order you want to add an item to: ");
+                    Long addOrderId = scanner.getLong();
+                    System.out.println("\nEnter the ID of the Item you want to add to this Order: ");
+                    Long addItemToOrderId = scanner.getLong();
+                    addItemToOrder(addOrderId, addItemToOrderId);              
                     break;
 
                 case "13": 
+                    System.out.println("\nEnter the ID of the Order to get the total cost: ");
+                    Long costOrderId = scanner.getLong();
+                    calculateCostForOrder(costOrderId);
+                    try {
+                        TimeUnit.SECONDS.sleep(2);
+                    } catch (InterruptedException e) {
+                        LOGGER.debug(e);
+                    }
                     break;
 
                 case "14": 
+                    System.out.println("\nEnter the ID of the Order you want to delete an Item from: ");
+                    Long deleteOrderId = scanner.getLong();
+                    System.out.println("\nEnter the ID of the Item you want to delete from the Order: ");
+                    Long deleteItemId = scanner.getLong();
+                    deleteItemFromOrder(deleteOrderId, deleteItemId);
                     break;
 
                 case "15": 
@@ -242,6 +278,53 @@ public class MenuSystem {
         ItemDAO itemDAO = new ItemDAO();
         try {
             itemDAO.delete(itemId);          
+        } catch (Exception e) {
+            LOGGER.debug(e);
+        }
+    }
+
+    private void deleteOrder(Long orderId){
+        OrderDAO orderDAO = new OrderDAO();
+        try {
+            orderDAO.delete(orderId);          
+        } catch (Exception e) {
+            LOGGER.debug(e);
+        }
+    } 
+
+    private void createOrder(Long customerOrderId, List<Integer> listOfItems){
+        OrderDAO orderDAO = new OrderDAO();
+        Order order = orderDAO.readLatest();
+
+        try {
+            orderDAO.create(new Order(order.getOrderID() + 1, customerOrderId.intValue(), listOfItems));          
+        } catch (Exception e) {
+            LOGGER.debug(e);
+        }
+    }
+
+    private void deleteItemFromOrder(Long deleteOrderId, Long deleteItemId){
+        OrderDAO orderDAO = new OrderDAO();
+        try {
+            orderDAO.deleteItemFromOrder(deleteItemId, deleteOrderId);          
+        } catch (Exception e) {
+            LOGGER.debug(e);
+        }
+    }
+
+    private void addItemToOrder(Long addOrderId, Long addItemToOrderId){
+        OrderDAO orderDAO = new OrderDAO();
+        try {
+            orderDAO.addItemToOrder(addItemToOrderId, addOrderId);          
+        } catch (Exception e) {
+            LOGGER.debug(e);
+        }
+    }
+
+    private void calculateCostForOrder(Long costOrderId){
+        OrderDAO orderDAO = new OrderDAO();
+        try {
+            System.out.println(orderDAO.calculateCost(costOrderId));       
         } catch (Exception e) {
             LOGGER.debug(e);
         }
