@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface DAO<T> {
 
-    List<T> readAll();
+    List<T> readAll() throws SQLException;
 
     T readById(Long id);
 

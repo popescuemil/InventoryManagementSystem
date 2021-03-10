@@ -79,8 +79,6 @@ public class DbUtils {
 
     public static DbUtils connect() {
         instance = new DbUtils();
-
-        instance.init("src\\main\\resources\\sql-schema.sql");
         return instance;
     }
 

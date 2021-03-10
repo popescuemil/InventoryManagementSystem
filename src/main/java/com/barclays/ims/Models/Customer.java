@@ -9,6 +9,10 @@ public class Customer {
         CustomerName = customerName;
     }
 
+    public Customer(String customerName) {
+        CustomerName = customerName;
+    }
+
     public int getCustomerID() {
         return CustomerID;
     }
@@ -27,6 +31,6 @@ public class Customer {
 
     @Override
     public String toString() {
-        return "CusomterID=" + getCustomerID() + ", CustomerName='" + getCustomerName();
+        return "CustomerID=" + getCustomerID() + ", CustomerName=" + getCustomerName();
     }
 }
