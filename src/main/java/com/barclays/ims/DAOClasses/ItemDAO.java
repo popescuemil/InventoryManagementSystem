@@ -27,7 +27,7 @@ public class ItemDAO implements DAO<Item> {
 
             Connection connection = dbUtils.getConnection();
 
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM ITEMS");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM IMS.ITEMS");
 
             ResultSet resultSet = statement.executeQuery();
 
@@ -51,7 +51,7 @@ public class ItemDAO implements DAO<Item> {
         try {
             Connection connection = dbUtils.getConnection();
 
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM ITEMS WHERE ItemID = ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM IMS.ITEMS WHERE ItemID = ?");
             statement.setInt(1, id.intValue());
 
             ResultSet resultSet = statement.executeQuery();
@@ -73,7 +73,7 @@ public class ItemDAO implements DAO<Item> {
         try {
             Connection connection = dbUtils.getConnection();
 
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM ITEMS ORDER BY ItemID DESC LIMIT 1");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM IMS.ITEMS ORDER BY ItemID DESC LIMIT 1");
 
             ResultSet resultSet = statement.executeQuery();
 
@@ -95,7 +95,7 @@ public class ItemDAO implements DAO<Item> {
         try {
             Connection connection = dbUtils.getConnection();
 
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO ITEMS (Name, Cost) VALUES (?,?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO IMS.ITEMS (Name, Cost) VALUES (?,?)");
             statement.setString(1, t.getItemName());
             statement.setDouble(2, t.getItemCost());
 
@@ -113,7 +113,7 @@ public class ItemDAO implements DAO<Item> {
         try {
             Connection connection = dbUtils.getConnection();
 
-            PreparedStatement statement = connection.prepareStatement("UPDATE ITEMS SET Name = ?, Cost = ? WHERE ItemID = ?");
+            PreparedStatement statement = connection.prepareStatement("UPDATE IMS.ITEMS SET Name = ?, Cost = ? WHERE ItemID = ?");
             statement.setString(1, t.getItemName());
             statement.setDouble(2, t.getItemCost());
             statement.setInt(3, t.getItemID());
@@ -132,7 +132,7 @@ public class ItemDAO implements DAO<Item> {
         try {
             Connection connection = dbUtils.getConnection();
 
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM ITEMS WHERE ItemID = ?");
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM IMS.ITEMS WHERE ItemID = ?");
             statement.setInt(1, id.intValue());
 
             statement.executeUpdate();

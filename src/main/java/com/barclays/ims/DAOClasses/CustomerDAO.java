@@ -24,7 +24,7 @@ public class CustomerDAO implements DAO<Customer> {
             List<Customer> customerList = new ArrayList<>();
             Connection connection = dbUtils.getConnection();
 
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM CUSTOMERS");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM IMS.CUSTOMERS");
 
             ResultSet resultSet = statement.executeQuery();
 
@@ -47,7 +47,7 @@ public class CustomerDAO implements DAO<Customer> {
         try {
             Connection connection = dbUtils.getConnection();
 
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM CUSTOMERS WHERE CustomerID = ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM IMS.CUSTOMERS WHERE CustomerID = ?");
             statement.setInt(1, id.intValue());
 
             ResultSet resultSet = statement.executeQuery();
@@ -68,7 +68,7 @@ public class CustomerDAO implements DAO<Customer> {
         try {
             Connection connection = dbUtils.getConnection();
 
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM CUSTOMERS ORDER BY CustomerID DESC LIMIT 1");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM IMS.CUSTOMERS ORDER BY CustomerID DESC LIMIT 1");
 
             ResultSet resultSet = statement.executeQuery();
 
@@ -89,7 +89,7 @@ public class CustomerDAO implements DAO<Customer> {
         try {
             Connection connection = dbUtils.getConnection();
 
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO CUSTOMERS (Name) VALUES (?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO IMS.CUSTOMERS (Name) VALUES (?)");
             statement.setString(1, t.getCustomerName());
 
             statement.executeUpdate();
@@ -106,7 +106,7 @@ public class CustomerDAO implements DAO<Customer> {
         try {
             Connection connection = dbUtils.getConnection();
 
-            PreparedStatement statement = connection.prepareStatement("UPDATE CUSTOMERS SET Name = ? WHERE CustomerID = ?");
+            PreparedStatement statement = connection.prepareStatement("UPDATE IMS.CUSTOMERS SET Name = ? WHERE CustomerID = ?");
             statement.setString(1, t.getCustomerName());
             statement.setInt(2, t.getCustomerID());
 
@@ -124,7 +124,7 @@ public class CustomerDAO implements DAO<Customer> {
         try {
             Connection connection = dbUtils.getConnection();
 
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM CUSTOMERS WHERE CustomerID = ?");
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM IMS.CUSTOMERS WHERE CustomerID = ?");
             statement.setInt(1, id.intValue());
 
             statement.executeUpdate();

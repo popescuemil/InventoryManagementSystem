@@ -298,7 +298,7 @@ public class MenuSystem {
 
         try {
             orderDAO.create(new Order(order.getOrderID() + 1, customerOrderId.intValue(), listOfItems));          
-        } catch (Exception e) {
+        } catch (Exception e) {23
             LOGGER.debug(e);
         }
     }
