@@ -44,13 +44,43 @@ public class CustomerDAO implements DAO<Customer> {
 
     @Override
     public Customer readById(Long id) {
-        // TODO Auto-generated method stub
+        try {
+            Connection connection = dbUtils.getConnection();
+
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM CUSTOMERS WHERE CustomerID = ?");
+            statement.setInt(1, id.intValue());
+
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                String customerName = resultSet.getString("Name");
+
+                return (new Customer(id.intValue(), customerName));
+            }
+        } catch (Exception e) {
+            LOGGER.debug(e);
+        }
         return null;
     }
 
     @Override
     public Customer readLatest() {
-        // TODO Auto-generated method stub
+        try {
+            Connection connection = dbUtils.getConnection();
+
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM CUSTOMERS ORDER BY CustomerID DESC LIMIT 1");
+
+            ResultSet resultSet = statement.executeQuery();
+
+            if(resultSet.next()){
+                int customerId = resultSet.getInt("CustomerID");
+                String customerName = resultSet.getString("Name");
+
+                return (new Customer(customerId, customerName));
+            }
+        } catch (Exception e) {
+            LOGGER.debug(e);
+        }
         return null;
     }
 
@@ -63,7 +93,8 @@ public class CustomerDAO implements DAO<Customer> {
             statement.setString(1, t.getCustomerName());
 
             statement.executeUpdate();
-            return null;
+
+            return readLatest();
         } catch (Exception e) {
             LOGGER.debug(e);
             return null;
@@ -80,7 +111,8 @@ public class CustomerDAO implements DAO<Customer> {
             statement.setInt(2, t.getCustomerID());
 
             statement.executeUpdate();
-            return null;
+
+            return readById(Long.valueOf(t.getCustomerID()));
         } catch (Exception e) {
             LOGGER.debug(e);
             return null;

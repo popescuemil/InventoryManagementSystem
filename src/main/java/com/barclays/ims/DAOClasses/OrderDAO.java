@@ -70,13 +70,11 @@ public class OrderDAO implements DAO<Order> {
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-
-                int orderId = resultSet.getInt("OrderID");
                 int customerId = resultSet.getInt("CustomerId");
 
                 PreparedStatement statementItems = connection
                         .prepareStatement("Select ItemId from ORDERS where OrderId = ?");
-                statementItems.setInt(1, orderId);
+                statementItems.setInt(1, id.intValue());
 
                 ResultSet resultSetItems = statementItems.executeQuery();
 
@@ -87,15 +85,12 @@ public class OrderDAO implements DAO<Order> {
                     itemIDs.add(itemId);
                 }
 
-                Order order = new Order(orderId, customerId, itemIDs);
-
-                return order;
+                return (new Order(id.intValue(), customerId, itemIDs));
             }
-            return null;
         } catch (Exception e) {
             LOGGER.debug(e);
-            return null;
         }
+        return null;
     }
 
     //selecting last record so we can increment orderId by 1 and add new order
@@ -104,23 +99,19 @@ public class OrderDAO implements DAO<Order> {
         try {
             Connection connection = dbUtils.getConnection();
 
-            PreparedStatement statement = connection.prepareStatement("SELECT OrderID FROM ORDERS ORDER BY OrderID DESC LIMIT 1");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM ORDERS ORDER BY OrderID DESC LIMIT 1");
 
             ResultSet resultSetOrder = statement.executeQuery();
 
-            int orderId = 0;
-
             if(resultSetOrder.next()){
-                orderId = resultSetOrder.getInt("OrderID");
+                int orderId = resultSetOrder.getInt("OrderID");
+
+                return readById(Long.valueOf(orderId));
             }
-
-            Order order = new Order(orderId, 0, null);
-
-            return order;
         } catch (Exception e) {
             LOGGER.debug(e);
-            return null;
         }
+        return null;
     }
 
     @Override
@@ -135,12 +126,13 @@ public class OrderDAO implements DAO<Order> {
                 statement.setInt(3, itemId);
     
                 statement.executeUpdate();
+
+                return readLatest();
             }            
-            return null;
         } catch (Exception e) {
             LOGGER.debug(e);
-            return null;
         }
+        return null;
     }
 
     @Override
