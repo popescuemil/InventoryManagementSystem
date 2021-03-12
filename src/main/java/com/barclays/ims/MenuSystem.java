@@ -29,8 +29,7 @@ public class MenuSystem {
     }
 
     public void init() {
-        DbUtils.connect();
-        DbUtils dbUtils = new DbUtils();
+        DbUtils dbUtils = DbUtils.connect();
         dbUtils.executeSQLFile("src\\main\\resources\\sql-schema.sql");
         
         while(true){
@@ -298,7 +297,7 @@ public class MenuSystem {
 
         try {
             orderDAO.create(new Order(order.getOrderID() + 1, customerOrderId.intValue(), listOfItems));          
-        } catch (Exception e) {23
+        } catch (Exception e) {
             LOGGER.debug(e);
         }
     }

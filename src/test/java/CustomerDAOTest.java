@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class TestCustomerDAO {
+public class CustomerDAOTest {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -29,7 +29,7 @@ public class TestCustomerDAO {
     }
 
     @Test
-    public void createCustomer() throws SQLException{
+    public void create() throws SQLException{
         Customer testCustomer = new Customer("Emil");
         CustomerDAO customerDAO = new CustomerDAO();
         Customer resultCustomer = customerDAO.create(testCustomer);
@@ -37,14 +37,14 @@ public class TestCustomerDAO {
     }
 
     @Test
-    public void updateCustomer() throws SQLException{
+    public void update() throws SQLException{
         CustomerDAO customerDAO = new CustomerDAO();
         Customer resultCustomer = customerDAO.update(new Customer(2, "Emil"));
         assertEquals("Emil", resultCustomer.getCustomerName());
     }
 
     @Test
-    public void deleteCustomer(){
+    public void delete(){
         int customerId = 9;
         CustomerDAO customerDAO = new CustomerDAO();
         customerDAO.delete(Long.valueOf(customerId));
@@ -52,7 +52,7 @@ public class TestCustomerDAO {
     }
 
     @Test
-    public void readLatestCustomer() {
+    public void readLatest() {
         DbUtils dbUtils = new DbUtils();
         CustomerDAO customerDAO = new CustomerDAO();
         try {
@@ -67,7 +67,7 @@ public class TestCustomerDAO {
     }
 
     @Test
-    public void readCustomerById() {
+    public void readById() {
         DbUtils dbUtils = new DbUtils();
         CustomerDAO customerDAO = new CustomerDAO();
         try {
