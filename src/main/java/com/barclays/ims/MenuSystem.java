@@ -29,8 +29,7 @@ public class MenuSystem {
     }
 
     public void init() {
-        DbUtils.connect();
-        DbUtils dbUtils = new DbUtils();
+        DbUtils dbUtils = DbUtils.connect();
         dbUtils.executeSQLFile("src\\main\\resources\\sql-schema.sql");
         
         while(true){

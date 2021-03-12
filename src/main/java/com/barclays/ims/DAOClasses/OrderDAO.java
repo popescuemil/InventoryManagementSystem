@@ -26,7 +26,7 @@ public class OrderDAO implements DAO<Order> {
             Connection connection = dbUtils.getConnection();
 
             PreparedStatement statement = connection
-                    .prepareStatement("SELECT DISTINCT OrderID, CustomerId from ORDERS");
+                    .prepareStatement("SELECT DISTINCT OrderID, CustomerId from IMS.ORDERS");
 
             ResultSet resultSet = statement.executeQuery();
 
@@ -36,7 +36,7 @@ public class OrderDAO implements DAO<Order> {
                 int customerId = resultSet.getInt("CustomerId");
 
                 PreparedStatement statementItems = connection
-                        .prepareStatement("Select ItemId from ORDERS where OrderId = ?");
+                        .prepareStatement("Select ItemId from IMS.ORDERS where OrderId = ?");
                 statementItems.setInt(1, orderId);
 
                 ResultSet resultSetItems = statementItems.executeQuery();
@@ -64,19 +64,17 @@ public class OrderDAO implements DAO<Order> {
             Connection connection = dbUtils.getConnection();
 
             PreparedStatement statement = connection
-                    .prepareStatement("SELECT DISTINCT OrderID, CustomerId from ORDERS WHERE OrderID = ?");
+                    .prepareStatement("SELECT DISTINCT OrderID, CustomerId from IMS.ORDERS WHERE OrderID = ?");
             
             statement.setInt(1, id.intValue());
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-
-                int orderId = resultSet.getInt("OrderID");
                 int customerId = resultSet.getInt("CustomerId");
 
                 PreparedStatement statementItems = connection
-                        .prepareStatement("Select ItemId from ORDERS where OrderId = ?");
-                statementItems.setInt(1, orderId);
+                        .prepareStatement("Select ItemId from IMS.ORDERS where OrderId = ?");
+                statementItems.setInt(1, id.intValue());
 
                 ResultSet resultSetItems = statementItems.executeQuery();
 
@@ -87,15 +85,12 @@ public class OrderDAO implements DAO<Order> {
                     itemIDs.add(itemId);
                 }
 
-                Order order = new Order(orderId, customerId, itemIDs);
-
-                return order;
+                return (new Order(id.intValue(), customerId, itemIDs));
             }
-            return null;
         } catch (Exception e) {
             LOGGER.debug(e);
-            return null;
         }
+        return null;
     }
 
     //selecting last record so we can increment orderId by 1 and add new order
@@ -104,23 +99,19 @@ public class OrderDAO implements DAO<Order> {
         try {
             Connection connection = dbUtils.getConnection();
 
-            PreparedStatement statement = connection.prepareStatement("SELECT OrderID FROM ORDERS ORDER BY OrderID DESC LIMIT 1");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM IMS.ORDERS ORDER BY OrderID DESC LIMIT 1");
 
             ResultSet resultSetOrder = statement.executeQuery();
 
-            int orderId = 0;
-
             if(resultSetOrder.next()){
-                orderId = resultSetOrder.getInt("OrderID");
+                int orderId = resultSetOrder.getInt("OrderID");
+
+                return readById(Long.valueOf(orderId));
             }
-
-            Order order = new Order(orderId, 0, null);
-
-            return order;
         } catch (Exception e) {
             LOGGER.debug(e);
-            return null;
         }
+        return null;
     }
 
     @Override
@@ -129,18 +120,18 @@ public class OrderDAO implements DAO<Order> {
             Connection connection = dbUtils.getConnection();
 
             for(Integer itemId : t.getItemIDs()){
-                PreparedStatement statement = connection.prepareStatement("INSERT INTO ORDERS (OrderID, CustomerId, ItemId) VALUES (?,?,?)");
+                PreparedStatement statement = connection.prepareStatement("INSERT INTO IMS.ORDERS (OrderID, CustomerId, ItemId) VALUES (?,?,?)");
                 statement.setInt(1, t.getOrderID());
                 statement.setInt(2, t.getCustomerID());
                 statement.setInt(3, itemId);
     
                 statement.executeUpdate();
-            }            
-            return null;
+            }      
+            return readLatest();      
         } catch (Exception e) {
             LOGGER.debug(e);
-            return null;
         }
+        return null;
     }
 
     @Override
@@ -154,7 +145,7 @@ public class OrderDAO implements DAO<Order> {
         try {
             Connection connection = dbUtils.getConnection();
 
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM ORDERS WHERE CustomerID = ?");
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM IMS.ORDERS WHERE OrderID = ?");
             statement.setInt(1, id.intValue());
 
             statement.executeUpdate();
@@ -169,7 +160,7 @@ public class OrderDAO implements DAO<Order> {
         try {
             Connection connection = dbUtils.getConnection();
 
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM ORDERS WHERE ItemId = ? and OrderID = ?");
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM IMS.ORDERS WHERE ItemId = ? and OrderID = ?");
             statement.setInt(1, itemId.intValue());
             statement.setInt(2, orderId.intValue());
 
@@ -179,28 +170,31 @@ public class OrderDAO implements DAO<Order> {
         }
     }
 
-    public void addItemToOrder(Long itemId, Long orderId){
+    public Order addItemToOrder(Long itemId, Long orderId){
         try {
             Connection connection = dbUtils.getConnection();
 
             Order order = readById(orderId);
 
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO ORDERS (OrderID, CustomerId, ItemId) VALUES (?,?,?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO IMS.ORDERS (OrderID, CustomerId, ItemId) VALUES (?,?,?)");
             statement.setInt(1, orderId.intValue());
             statement.setInt(2, order.getCustomerID());
             statement.setInt(3, itemId.intValue());
 
             statement.executeUpdate();
+
+            return readById(orderId);
         } catch (Exception e) {
             LOGGER.debug(e);
         }
+        return null;
     }
 
     public double calculateCost(Long orderId){
         try {
             Connection connection = dbUtils.getConnection();
 
-            PreparedStatement statement = connection.prepareStatement("SELECT Cost from ORDERS LEFT JOIN ITEMS ON ORDERS.ItemId = ITEMS.ItemID where OrderID = ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT Cost from IMS.ORDERS LEFT JOIN IMS.ITEMS ON ORDERS.ItemId = ITEMS.ItemID where OrderID = ?");
             statement.setInt(1, orderId.intValue());
 
             ResultSet resultSet = statement.executeQuery();
